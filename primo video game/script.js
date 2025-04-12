@@ -1,15 +1,14 @@
 function startGame() {
     myGameArea.start();
-    myGameArea.draw(redSquare);
+    myGameArea.draw(snake);
 }
  
-var redSquare = {
-    width: 20,
-    height: 20,
-    x: 10,
-    y: 120,
-    color: "red"
-  };
+var snake = {
+  x: 10,
+  y: 120
+};
+
+
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -23,29 +22,31 @@ var myGameArea = {
 
     draw: function(component) {
         this.context.clearRect(0,0, this.canvas.width, this.canvas.height); //prima di disegnare il nuovo quadrato, lo cancella quello vecchio
-        this.context.fillStyle = component.color; //imposta il colore del prossimo quadrato
-        this.context.fillRect(component.x, component.y, component.width, component.height);//Viene creato il nuovo quadrato con le coordinate modificate dalla funzione moveup ecc.
-      }
+        this.context.fillStyle = "red"; //imposta il colore del prossimo quadrato
+        this.context.fillRect(component.x, component.y, 20, 20);//Viene creato il nuovo quadrato con le coordinate modificate dalla funzione moveup ecc.
+                     
+      
+    }, 
+
 }
 function moveup() {
-  
-    redSquare.y -= 30;// cambia il component di draw()
+    snake.y -= 30;// cambia il component di draw()
   
   }
   
 function movedown() {
-    redSquare.y += 30;
+    snake.y += 30;
   }
   
 function moveleft() {
-    redSquare.x -= 30;
+    snake.x -= 30;
   }
   
 function moveright() {
-    redSquare.x += 30;
+    snake.x += 30;
   }
 
 function updateGameArea() {
     
-    myGameArea.draw(redSquare);
+    myGameArea.draw(snake);
 }
