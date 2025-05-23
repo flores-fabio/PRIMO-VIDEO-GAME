@@ -3,6 +3,8 @@ const ctx = canvas.getContext("2d");
 
 const c = 20;
 const g = canvas.width / c;
+let v = 500;
+let intervalId;
 
 let snake = [
     { x: 10, y: 10 }
@@ -20,7 +22,10 @@ const sprite = {
     testaLeft: new Image(),
     testaRight: new Image(),
     corpo: new Image(),
-    coda: new Image(),
+    codaUp: new Image(),
+    codaDown: new Image(),
+    codaLeft: new Image(),
+    codaRight: new Image(),
     mela: new Image()
 };
 
@@ -29,7 +34,10 @@ sprite.testaDown.src = "img/testa_down.png";
 sprite.testaLeft.src = "img/testa_left.png";
 sprite.testaRight.src = "img/testa_right.png";
 sprite.corpo.src = "img/corpo.png";
-sprite.coda.src = "img/coda.png";
+sprite.codaUp.src = "img/coda_up.png";
+sprite.codaDown.src = "img/coda_down.png";
+sprite.codaLeft.src = "img/coda_left.png";
+sprite.codaRight.src = "img/coda_right.png";
 sprite.mela.src = "img/mela.png";
 
 function randomCibo() {
@@ -56,6 +64,11 @@ function draw() {
 
     if (head.x === food.x && head.y === food.y) {
         food = randomCibo();
+        
+        if (snake.length % 5 === 0 && snake.length !== 0) {
+        v = Math.max(100, v - 100); // limite minimo di velocità
+        startGameLoop(); // riavvia con la nuova velocità
+    }
     } else {
         snake.pop();
     }
@@ -71,22 +84,32 @@ function draw() {
     for (let i = 0; i < snake.length; i++) {
         const part = snake[i];
 
+        let headImg = sprite.testaRight;
+        let tailImg = sprite.codaUp;
+
         if (i === 0) {
             // Testa in base alla direzione
-            let headImg = sprite.testaRight;
+            
+
             if (dx === 1) headImg = sprite.testaRight;
             else if (dx === -1) headImg = sprite.testaLeft;
             else if (dy === -1) headImg = sprite.testaUp;
             else if (dy === 1) headImg = sprite.testaDown;
             ctx.drawImage(headImg, part.x * c, part.y * c, c, c);
         } else if (i === snake.length - 1) {
-            ctx.drawImage(sprite.coda, part.x * c, part.y * c, c, c);
+            if (dx === 1) tailImg = sprite.codaRight;
+            else if (dx === -1) tailImg = sprite.codaLeft;
+            else if (dy === -1) tailImg = sprite.codaUp;
+            else if (dy === 1) tailImg = sprite.codaDown;
+
+            ctx.drawImage(tailImg, part.x * c, part.y * c, c, c);
         } else {
             ctx.drawImage(sprite.corpo, part.x * c, part.y * c, c, c);
         }
     }
 
     punteggio();
+    
 }
 
 function collision(x, y) {
@@ -103,8 +126,11 @@ function changeDirection(newDx, newDy) {
 function punteggio() {
     let punti = document.getElementById("punteggio");
     punti.innerHTML = snake.length;
+
+    
 }
 
+//live
 // Bottoni direzionali
 document.getElementById("moveup").addEventListener("click", () => changeDirection(0, -1));
 document.getElementById("movedown").addEventListener("click", () => changeDirection(0, 1));
@@ -119,4 +145,15 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") changeDirection(1, 0);
 });
 
-setInterval(draw, 500);
+
+
+
+function startGameLoop() {
+
+    if (intervalId) clearInterval(intervalId);
+    intervalId = setInterval(draw, v);
+}
+
+
+startGameLoop();
+
