@@ -64,14 +64,17 @@ function draw() {
 
     if (head.x === food.x && head.y === food.y) {
         food = randomCibo();
-        
-        if (snake.length % 5 === 0 && snake.length !== 0) {
-        v = Math.max(100, v - 100); // limite minimo di velocità
-        startGameLoop(); // riavvia con la nuova velocità
-    }
+
+        // Aumenta la velocità ogni 5 cibi mangiati (escludendo la testa iniziale)
+        if ((snake.length - 1) % 5 === 0 && snake.length > 1) {
+            v = Math.max(100, v - 100); // velocità minima: 100ms
+            clearInterval(intervalId); // Interrompi il vecchio intervallo
+            intervalId = setInterval(draw, v); // Avvia il nuovo intervallo
+        }
     } else {
         snake.pop();
     }
+
 
     // Sfondo
     ctx.fillStyle = "#f1f1f1";
