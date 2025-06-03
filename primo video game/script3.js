@@ -100,13 +100,18 @@ function draw() {
             else if (dy === 1) headImg = sprite.testaDown;
             ctx.drawImage(headImg, part.x * c, part.y * c, c, c);
         } else if (i === snake.length - 1) {
-            if (dx === 1) tailImg = sprite.codaRight;
-            else if (dx === -1) tailImg = sprite.codaLeft;
-            else if (dy === -1) tailImg = sprite.codaUp;
-            else if (dy === 1) tailImg = sprite.codaDown;
+            const beforeTail = snake[i - 1];
+
+            const tailDx = part.x - beforeTail.x;
+            const tailDy = part.y - beforeTail.y;
+
+            if (tailDx === 1) tailImg = sprite.codaLeft;
+            else if (tailDx === -1) tailImg = sprite.codaRight;
+            else if (tailDy === 1) tailImg = sprite.codaUp;
+            else if (tailDy === -1) tailImg = sprite.codaDown;
 
             ctx.drawImage(tailImg, part.x * c, part.y * c, c, c);
-        } else {
+        }else {
             ctx.drawImage(sprite.corpo, part.x * c, part.y * c, c, c);
         }
     }
